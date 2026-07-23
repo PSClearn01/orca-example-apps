@@ -1,0 +1,19 @@
+services:
+  ipam-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: homelab-ipam-app
+    ports:
+      - "3050:3000"
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DATA_DIR=/app/data
+    volumes:
+      - ipam-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  ipam-data:
+    driver: local

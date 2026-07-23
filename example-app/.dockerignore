@@ -1,0 +1,10 @@
+.git
+.gitignore
+.svelte-kit
+build
+node_modules
+npm-debug.log
+data/*.json
+Dockerfile
+docker-compose*.yml
+README.md

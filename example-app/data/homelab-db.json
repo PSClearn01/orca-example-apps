@@ -1,0 +1,534 @@
+{
+  "subnets": [
+    {
+      "id": "sub-mgmt",
+      "name": "Management & Infra",
+      "cidr": "192.168.1.0/24",
+      "gateway": "192.168.1.1",
+      "vlan": 1,
+      "description": "Core switches, hypervisors, and gateway equipment",
+      "color": "#3b82f6",
+      "dnsPrimary": "192.168.1.53",
+      "dnsSecondary": "1.1.1.1"
+    },
+    {
+      "id": "sub-servers",
+      "name": "Servers & Virtual Machines",
+      "cidr": "10.0.10.0/24",
+      "gateway": "10.0.10.1",
+      "vlan": 10,
+      "description": "Production VMs, media servers, and database instances",
+      "color": "#8b5cf6",
+      "dnsPrimary": "192.168.1.53",
+      "dnsSecondary": "9.9.9.9"
+    },
+    {
+      "id": "sub-containers",
+      "name": "K8s & Docker Services",
+      "cidr": "10.0.20.0/24",
+      "gateway": "10.0.20.1",
+      "vlan": 20,
+      "description": "Containerized workloads and reverse proxy VIPs",
+      "color": "#10b981",
+      "dnsPrimary": "192.168.1.53",
+      "dnsSecondary": "1.1.1.1"
+    },
+    {
+      "id": "sub-iot",
+      "name": "Smart Home & IoT",
+      "cidr": "172.16.50.0/24",
+      "gateway": "172.16.50.1",
+      "vlan": 50,
+      "description": "Sensors, cameras, microcontrollers, and isolated smart devices",
+      "color": "#f59e0b",
+      "dnsPrimary": "1.1.1.1",
+      "dnsSecondary": "8.8.8.8"
+    }
+  ],
+  "entities": [
+    {
+      "id": "ent-1",
+      "name": "udm-pro-gateway",
+      "type": "network",
+      "ip": "192.168.1.1",
+      "mac": "74:83:C2:11:AA:01",
+      "subnetId": "sub-mgmt",
+      "vlan": 1,
+      "status": "online",
+      "os": "UniFi OS v3.2.12",
+      "specs": {
+        "cpu": "4-Core ARM Cortex-A57",
+        "ram": "4GB DDR4",
+        "disk": "1TB NVMe"
+      },
+      "location": "Rack Unit 1",
+      "tags": [
+        "Router",
+        "Gateway",
+        "UniFi",
+        "Firewall"
+      ],
+      "notes": "Main WAN gateway & UniFi Controller",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-2",
+      "name": "pve-node-01",
+      "type": "hypervisor",
+      "ip": "192.168.1.10",
+      "mac": "E4:5F:01:4B:C8:10",
+      "subnetId": "sub-mgmt",
+      "vlan": 1,
+      "status": "online",
+      "os": "Proxmox VE 8.1.4",
+      "specs": {
+        "cpu": "AMD EPYC 7302P (16C/32T)",
+        "ram": "128GB ECC DDR4",
+        "disk": "2x 2TB NVMe ZFS Mirror"
+      },
+      "location": "Rack Unit 3",
+      "tags": [
+        "Hypervisor",
+        "Proxmox",
+        "Compute",
+        "Production"
+      ],
+      "notes": "Primary virtualization node",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-3",
+      "name": "pve-node-02",
+      "type": "hypervisor",
+      "ip": "192.168.1.11",
+      "mac": "E4:5F:01:4B:C8:11",
+      "subnetId": "sub-mgmt",
+      "vlan": 1,
+      "status": "online",
+      "os": "Proxmox VE 8.1.4",
+      "specs": {
+        "cpu": "AMD Ryzen 9 7900X (12C/24T)",
+        "ram": "64GB DDR5",
+        "disk": "2x 1TB NVMe ZFS Mirror"
+      },
+      "location": "Rack Unit 4",
+      "tags": [
+        "Hypervisor",
+        "Proxmox",
+        "Compute",
+        "HA Cluster"
+      ],
+      "notes": "Secondary compute node in HA cluster",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-4",
+      "name": "truenas-scale-01",
+      "type": "storage",
+      "ip": "192.168.1.20",
+      "mac": "A0:36:BC:55:12:34",
+      "subnetId": "sub-mgmt",
+      "vlan": 1,
+      "status": "online",
+      "os": "TrueNAS SCALE 23.10.1",
+      "specs": {
+        "cpu": "Intel Xeon E-2388G",
+        "ram": "64GB ECC DDR4",
+        "disk": "8x 16TB ZFS RAIDZ2 (96TB Net)"
+      },
+      "location": "Rack Unit 6",
+      "tags": [
+        "NAS",
+        "Storage",
+        "ZFS",
+        "NFS",
+        "iSCSI"
+      ],
+      "notes": "Main NFS datastore & S3 Object Storage",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-5",
+      "name": "pihole-dns-primary",
+      "type": "service",
+      "ip": "192.168.1.53",
+      "mac": "DC:A6:32:88:99:53",
+      "subnetId": "sub-mgmt",
+      "vlan": 1,
+      "status": "online",
+      "os": "Debian 12 (Alpine LXC)",
+      "specs": {
+        "cpu": "2 vCPU",
+        "ram": "2GB",
+        "disk": "16GB SSD"
+      },
+      "location": "pve-node-01",
+      "tags": [
+        "DNS",
+        "AdBlock",
+        "Unbound",
+        "DHCP"
+      ],
+      "notes": "Primary Recursive DNS + Ad blocking via Unbound",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-6",
+      "name": "k8s-control-plane-01",
+      "type": "vm",
+      "ip": "10.0.10.15",
+      "mac": "52:54:00:12:34:56",
+      "subnetId": "sub-servers",
+      "vlan": 10,
+      "status": "online",
+      "os": "Ubuntu 24.04 LTS (Talos Linux)",
+      "specs": {
+        "cpu": "4 vCPU",
+        "ram": "8GB",
+        "disk": "60GB SSD"
+      },
+      "location": "pve-node-01",
+      "tags": [
+        "Kubernetes",
+        "Talos",
+        "ControlPlane",
+        "K8s"
+      ],
+      "notes": "Kubernetes Master Node 01",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-7",
+      "name": "k8s-worker-node-01",
+      "type": "vm",
+      "ip": "10.0.10.21",
+      "mac": "52:54:00:12:34:57",
+      "subnetId": "sub-servers",
+      "vlan": 10,
+      "status": "online",
+      "os": "Ubuntu 24.04 LTS",
+      "specs": {
+        "cpu": "8 vCPU",
+        "ram": "32GB",
+        "disk": "120GB SSD"
+      },
+      "location": "pve-node-01",
+      "tags": [
+        "Kubernetes",
+        "WorkerNode",
+        "Docker"
+      ],
+      "notes": "K8s GPU / Heavy workloads node",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-8",
+      "name": "plex-media-server",
+      "type": "vm",
+      "ip": "10.0.10.50",
+      "mac": "52:54:00:AB:CD:01",
+      "subnetId": "sub-servers",
+      "vlan": 10,
+      "status": "online",
+      "os": "Ubuntu 22.04 LTS (Docker)",
+      "specs": {
+        "cpu": "6 vCPU + Intel QuickSync",
+        "ram": "16GB",
+        "disk": "50GB SSD + NFS Mounts"
+      },
+      "location": "pve-node-02",
+      "tags": [
+        "Media",
+        "Plex",
+        "Arr-Suite",
+        "Transcoding"
+      ],
+      "notes": "Plex Media Server with iGPU pass-through",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-9",
+      "name": "nginx-proxy-manager",
+      "type": "container",
+      "ip": "10.0.20.5",
+      "mac": "02:42:0A:00:14:05",
+      "subnetId": "sub-containers",
+      "vlan": 20,
+      "status": "online",
+      "os": "Docker (Alpine)",
+      "specs": {
+        "cpu": "1 vCPU",
+        "ram": "1GB",
+        "disk": "10GB"
+      },
+      "location": "k8s-worker-node-01",
+      "tags": [
+        "ReverseProxy",
+        "SSL",
+        "LetEncrypt",
+        "Gateway"
+      ],
+      "notes": "TLS termination and internal domain routing (*.lab.home)",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-10",
+      "name": "home-assistant-os",
+      "type": "vm",
+      "ip": "10.0.10.80",
+      "mac": "52:54:00:80:80:80",
+      "subnetId": "sub-servers",
+      "vlan": 10,
+      "status": "online",
+      "os": "Home Assistant OS 11.5",
+      "specs": {
+        "cpu": "4 vCPU",
+        "ram": "4GB",
+        "disk": "64GB SSD"
+      },
+      "location": "pve-node-01",
+      "tags": [
+        "SmartHome",
+        "HomeAssistant",
+        "Zigbee",
+        "Automation"
+      ],
+      "notes": "Home automation core with Sonoff Zigbee 3.0 dongle",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-11",
+      "name": "usw-pro-24-poe",
+      "type": "network",
+      "ip": "192.168.1.2",
+      "mac": "74:83:C2:22:BB:02",
+      "subnetId": "sub-mgmt",
+      "vlan": 1,
+      "status": "warning",
+      "os": "UniFi Switch OS v6.5.59",
+      "specs": {
+        "cpu": "ARM Cortex A9",
+        "ram": "512MB",
+        "disk": "Flash"
+      },
+      "location": "Rack Unit 2",
+      "tags": [
+        "Switch",
+        "PoE+",
+        "10G SFP+",
+        "VLAN"
+      ],
+      "notes": "Core Layer 2/3 24-Port PoE Switch (Port 18 high temp warning)",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    },
+    {
+      "id": "ent-12",
+      "name": "zigbee-gateway-ethernet",
+      "type": "iot",
+      "ip": "172.16.50.12",
+      "mac": "AC:D0:74:11:22:33",
+      "subnetId": "sub-iot",
+      "vlan": 50,
+      "status": "online",
+      "os": "ESP32 Tasmota",
+      "specs": {
+        "cpu": "ESP32 Dual Core",
+        "ram": "520KB",
+        "disk": "4MB Flash"
+      },
+      "location": "Living Room Ceiling",
+      "tags": [
+        "IoT",
+        "Zigbee",
+        "ESP32",
+        "Sensor"
+      ],
+      "notes": "Ethernet Zigbee Coordinator",
+      "lastSeen": "2026-07-23T10:11:06.507Z"
+    }
+  ],
+  "allocations": [
+    {
+      "id": "alloc-192-168-1-1",
+      "subnetId": "sub-mgmt",
+      "ip": "192.168.1.1",
+      "hostname": "udm-pro-gateway",
+      "entityId": "ent-1",
+      "status": "active",
+      "mac": "74:83:C2:11:AA:01",
+      "notes": "Main WAN gateway & UniFi Controller",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-192-168-1-10",
+      "subnetId": "sub-mgmt",
+      "ip": "192.168.1.10",
+      "hostname": "pve-node-01",
+      "entityId": "ent-2",
+      "status": "active",
+      "mac": "E4:5F:01:4B:C8:10",
+      "notes": "Primary virtualization node",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-192-168-1-11",
+      "subnetId": "sub-mgmt",
+      "ip": "192.168.1.11",
+      "hostname": "pve-node-02",
+      "entityId": "ent-3",
+      "status": "active",
+      "mac": "E4:5F:01:4B:C8:11",
+      "notes": "Secondary compute node in HA cluster",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-192-168-1-20",
+      "subnetId": "sub-mgmt",
+      "ip": "192.168.1.20",
+      "hostname": "truenas-scale-01",
+      "entityId": "ent-4",
+      "status": "active",
+      "mac": "A0:36:BC:55:12:34",
+      "notes": "Main NFS datastore & S3 Object Storage",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-192-168-1-53",
+      "subnetId": "sub-mgmt",
+      "ip": "192.168.1.53",
+      "hostname": "pihole-dns-primary",
+      "entityId": "ent-5",
+      "status": "active",
+      "mac": "DC:A6:32:88:99:53",
+      "notes": "Primary Recursive DNS + Ad blocking via Unbound",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-10-0-10-15",
+      "subnetId": "sub-servers",
+      "ip": "10.0.10.15",
+      "hostname": "k8s-control-plane-01",
+      "entityId": "ent-6",
+      "status": "active",
+      "mac": "52:54:00:12:34:56",
+      "notes": "Kubernetes Master Node 01",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-10-0-10-21",
+      "subnetId": "sub-servers",
+      "ip": "10.0.10.21",
+      "hostname": "k8s-worker-node-01",
+      "entityId": "ent-7",
+      "status": "active",
+      "mac": "52:54:00:12:34:57",
+      "notes": "K8s GPU / Heavy workloads node",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-10-0-10-50",
+      "subnetId": "sub-servers",
+      "ip": "10.0.10.50",
+      "hostname": "plex-media-server",
+      "entityId": "ent-8",
+      "status": "active",
+      "mac": "52:54:00:AB:CD:01",
+      "notes": "Plex Media Server with iGPU pass-through",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-10-0-20-5",
+      "subnetId": "sub-containers",
+      "ip": "10.0.20.5",
+      "hostname": "nginx-proxy-manager",
+      "entityId": "ent-9",
+      "status": "active",
+      "mac": "02:42:0A:00:14:05",
+      "notes": "TLS termination and internal domain routing (*.lab.home)",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-10-0-10-80",
+      "subnetId": "sub-servers",
+      "ip": "10.0.10.80",
+      "hostname": "home-assistant-os",
+      "entityId": "ent-10",
+      "status": "active",
+      "mac": "52:54:00:80:80:80",
+      "notes": "Home automation core with Sonoff Zigbee 3.0 dongle",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-192-168-1-2",
+      "subnetId": "sub-mgmt",
+      "ip": "192.168.1.2",
+      "hostname": "usw-pro-24-poe",
+      "entityId": "ent-11",
+      "status": "active",
+      "mac": "74:83:C2:22:BB:02",
+      "notes": "Core Layer 2/3 24-Port PoE Switch (Port 18 high temp warning)",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-172-16-50-12",
+      "subnetId": "sub-iot",
+      "ip": "172.16.50.12",
+      "hostname": "zigbee-gateway-ethernet",
+      "entityId": "ent-12",
+      "status": "active",
+      "mac": "AC:D0:74:11:22:33",
+      "notes": "Ethernet Zigbee Coordinator",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-10-0-10-1",
+      "subnetId": "sub-servers",
+      "ip": "10.0.10.1",
+      "hostname": "servers---virtual-machines-gw",
+      "status": "reserved",
+      "notes": "Subnet Gateway IP",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-10-0-20-1",
+      "subnetId": "sub-containers",
+      "ip": "10.0.20.1",
+      "hostname": "k8s---docker-services-gw",
+      "status": "reserved",
+      "notes": "Subnet Gateway IP",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    },
+    {
+      "id": "alloc-172-16-50-1",
+      "subnetId": "sub-iot",
+      "ip": "172.16.50.1",
+      "hostname": "smart-home---iot-gw",
+      "status": "reserved",
+      "notes": "Subnet Gateway IP",
+      "updatedAt": "2026-07-23T10:11:06.511Z"
+    }
+  ],
+  "logs": [
+    {
+      "id": "log-1",
+      "timestamp": "2026-07-23T08:11:06.507Z",
+      "action": "IP Allocated",
+      "details": "Assigned 10.0.20.5 to nginx-proxy-manager",
+      "type": "success"
+    },
+    {
+      "id": "log-2",
+      "timestamp": "2026-07-23T05:11:06.507Z",
+      "action": "Device Warning",
+      "details": "usw-pro-24-poe reported elevated temperature (68°C)",
+      "type": "warning"
+    },
+    {
+      "id": "log-3",
+      "timestamp": "2026-07-22T22:11:06.507Z",
+      "action": "Entity Registered",
+      "details": "New Proxmox hypervisor node pve-node-02 registered",
+      "type": "info"
+    }
+  ]
+}
